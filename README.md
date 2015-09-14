@@ -1,19 +1,12 @@
-packer
-===========
-
-Tool for gobuild3.
+# gopack
+Tool for [gorelease](https://github.com/gorelease/gorelease)
 
 ## Install
-	go get github.com/gobuild/gobuild3/packer
-
-packer also require `bash` installed.
+	go get github.com/gorelease/gopack
 
 ## Usage
 The most usage way is, just run command
 
-	./packer
+	$ gopack
 
-see more flags in `./packer -h`
-
-Sample [.gobuild.yml](.gobuild.yml)
-
+see more flags in `gopack -h`

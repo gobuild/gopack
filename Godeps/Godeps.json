@@ -1,0 +1,29 @@
+{
+	"ImportPath": "github.com/gorelease/gopack",
+	"GoVersion": "go1.4.2",
+	"Deps": [
+		{
+			"ImportPath": "github.com/codegangsta/cli",
+			"Comment": "1.2.0-139-g142e6cd",
+			"Rev": "142e6cd241a4dfbf7f07a018f1f8225180018da4"
+		},
+		{
+			"ImportPath": "github.com/codegangsta/inject",
+			"Comment": "v1.0-rc1-4-g4b81725",
+			"Rev": "4b8172520a03fa190f427bbd284db01b459bfce7"
+		},
+		{
+			"ImportPath": "github.com/codeskyblue/go-sh",
+			"Comment": "v0.1-26-g7a1ecf3",
+			"Rev": "7a1ecf31d357d6725db2110109de1795a5b4b14a"
+		},
+		{
+			"ImportPath": "github.com/gobuild/goyaml",
+			"Rev": "01c074777ae9533b2870ee6dc408cfda2e7ef840"
+		},
+		{
+			"ImportPath": "github.com/gobuild/log",
+			"Rev": "f1f03dc733eb8acf247f889dd103ee1de1a06caa"
+		}
+	]
+}

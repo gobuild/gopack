@@ -4,38 +4,36 @@ import (
 	"io/ioutil"
 
 	"github.com/codeskyblue/go-sh"
-	"github.com/gobuild/goyaml"
+	goyaml "gopkg.in/yaml.v2"
 )
 
 type PackageConfig struct {
-	Author      string `yaml:"author"`
-	Description string `yaml:"description"`
-	Filesets    struct {
-		Includes []string `yaml:"includes"`
-		Excludes []string `yaml:"excludes"`
-		Depth    int      `yaml:"depth"`
-	} `yaml:"filesets"`
-	Settings struct {
+	Author      string   `yaml:"author"`
+	Description string   `yaml:"description"`
+	Includes    []string `yaml:"includes"`
+	Excludes    []string `yaml:"excludes"`
+	Depth       int      `yaml:"depth"`
+	Script      []string `yaml:"script"`
+	Settings    struct {
 		TargetDir string   `yaml:"targetdir"` // target dir
 		Outfiles  []string `yaml:"outfiles"`
-		Build     string   `yaml:"build"`
 	} `yaml:"settings"`
 }
 
-const RCFILE = ".gobuild.yml"
+const RCFILE = ".gopack.yml"
 
 var DefaultPcfg *PackageConfig
 
-const DEFAULT_BUILD = `test -d Godeps && go(){ godep go "$@";} ; go install -v`
+var DEFAULT_SCRIPT = []string{"go get -v", "go install"}
 
 func init() {
 	pcfg := &PackageConfig{}
 	pcfg.Author = ""
-	pcfg.Filesets.Includes = []string{"README.md", "LICENSE", "conf", "static", "views"}
-	pcfg.Filesets.Excludes = []string{"\\.git", ".*\\.go"}
-	pcfg.Filesets.Depth = 3
+	pcfg.Includes = []string{"README.md", "LICENSE", "conf", "templates", "public", "static", "views"}
+	pcfg.Excludes = []string{"\\.git", ".*\\.go"}
+	pcfg.Depth = 20
 	pcfg.Settings.TargetDir = ""
-	pcfg.Settings.Build = DEFAULT_BUILD
+	pcfg.Script = DEFAULT_SCRIPT
 	DefaultPcfg = pcfg
 }
 

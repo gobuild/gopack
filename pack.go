@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -11,7 +10,6 @@ import (
 
 	"github.com/codegangsta/cli"
 	sh "github.com/codeskyblue/go-sh"
-	"github.com/gobuild/goyaml"
 )
 
 func findFiles(path string, depth int, skips []*regexp.Regexp) ([]string, error) {
@@ -48,7 +46,7 @@ func findFiles(path string, depth int, skips []*regexp.Regexp) ([]string, error)
 	return files, err
 }
 
-func Action(c *cli.Context) {
+func actionPack(c *cli.Context) {
 	var goos, goarch = c.String("os"), c.String("arch")
 	//var depth = c.Int("depth")
 	var output = c.String("output")
@@ -57,14 +55,8 @@ func Action(c *cli.Context) {
 	var adds = c.StringSlice("add")
 	var rmflag = c.Bool("rm")
 
-	if c.Bool("debug") {
+	if c.GlobalBool("debug") {
 		log.SetOutputLevel(log.Ldebug)
-	}
-
-	if c.Bool("init") {
-		data, _ := goyaml.Marshal(DefaultPcfg)
-		fmt.Print(string(data))
-		return
 	}
 
 	log.Debugf("os: %s, arch: %s", goos, goarch)
@@ -99,11 +91,11 @@ func Action(c *cli.Context) {
 	// pcfg.Filesets.Includes = append(pcfg.Filesets.Includes, adds...)
 
 	var skips []*regexp.Regexp
-	for _, str := range pcfg.Filesets.Excludes {
+	for _, str := range pcfg.Excludes {
 		skips = append(skips, regexp.MustCompile("^"+str+"$"))
 	}
 	var needs []*regexp.Regexp
-	for _, str := range pcfg.Filesets.Includes {
+	for _, str := range pcfg.Includes {
 		needs = append(needs, regexp.MustCompile("^"+str+"$"))
 	}
 
@@ -112,18 +104,18 @@ func Action(c *cli.Context) {
 	hasExt := func(ext string) bool { return strings.HasSuffix(output, ext) }
 	switch {
 	case hasExt(".zip"):
-		fmt.Println("zip format")
+		log.Println("zip format")
 		z, err = CreateZip(output)
 	case hasExt(".tar"):
-		fmt.Println("tar format")
+		log.Println("tar format")
 		z, err = CreateTar(output)
 	case hasExt(".tgz"):
 		fallthrough
 	case hasExt(".tar.gz"):
-		fmt.Println("tar.gz format")
+		log.Println("tar.gz format")
 		z, err = CreateTgz(output)
 	default:
-		fmt.Println("unsupport file archive format")
+		log.Println("unsupport file archive format")
 		os.Exit(1)
 	}
 	if err != nil {
@@ -145,12 +137,13 @@ func Action(c *cli.Context) {
 		defer os.Remove(symdir)
 		// opts := []string{"install", "-v"}
 		// opts = append(opts, strings.Fields(pcfg.Settings.Addopts)...) // TODO: here need to use shell args parse lib
-		if pcfg.Settings.Build == "" {
-			pcfg.Settings.Build = DEFAULT_BUILD
-		}
-		if err = sess.Command("bash", "-c", pcfg.Settings.Build).Run(); err != nil {
-			// if err = sess.Command("go", opts).Run(); err != nil {
-			return
+		//if pcfg.Settings.Build == "" {
+		//pcfg.Settings.Build = DEFAULT_BUILD
+		//}
+		for _, command := range pcfg.Script {
+			if err = sess.Command("bash", "-c", command).Run(); err != nil {
+				return
+			}
 		}
 		os.Remove(symdir) // I have to do it twice
 
@@ -169,8 +162,8 @@ func Action(c *cli.Context) {
 	}
 
 	log.Debug("archive files")
-	depth := pcfg.Filesets.Depth
-	for _, filename := range pcfg.Filesets.Includes {
+	depth := pcfg.Depth
+	for _, filename := range pcfg.Includes {
 		fs, err := findFiles(filename, depth, skips)
 		if err != nil {
 			return

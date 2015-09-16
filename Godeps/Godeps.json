@@ -18,12 +18,12 @@
 			"Rev": "7a1ecf31d357d6725db2110109de1795a5b4b14a"
 		},
 		{
-			"ImportPath": "github.com/gobuild/goyaml",
-			"Rev": "01c074777ae9533b2870ee6dc408cfda2e7ef840"
-		},
-		{
 			"ImportPath": "github.com/gobuild/log",
 			"Rev": "f1f03dc733eb8acf247f889dd103ee1de1a06caa"
+		},
+		{
+			"ImportPath": "gopkg.in/yaml.v2",
+			"Rev": "7ad95dd0798a40da1ccdff6dff35fd177b5edf40"
 		}
 	]
 }

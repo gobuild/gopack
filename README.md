@@ -1,4 +1,7 @@
 # gopack
+[![Build Status](https://travis-ci.org/gorelease/gopack.svg)](https://travis-ci.org/gorelease/gopack)
+[![gorelease](https://dn-gorelease.qbox.me/gorelease-download-blue.svg)](http://gorelease.herokuapp.com/gorelease/gopack)
+
 Tool for [gorelease](https://github.com/gorelease/gorelease)
 
 ## Install

@@ -4,13 +4,20 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"strings"
-
-	"github.com/gobuild/log"
 
 	"github.com/codegangsta/cli"
 	sh "github.com/codeskyblue/go-sh"
+	"github.com/gobuild/log"
 )
+
+func shExecString(sess *sh.Session, command string) error {
+	if runtime.GOOS == "windows" {
+		return sess.Command("cmd", "/c", command).Run()
+	}
+	return sess.Command("bash", "-c", command).Run()
+}
 
 func findFiles(path string, depth int, skips []*regexp.Regexp) ([]string, error) {
 	baseNumSeps := strings.Count(path, string(os.PathSeparator))
@@ -58,6 +65,9 @@ func actionPack(c *cli.Context) {
 	if c.GlobalBool("debug") {
 		log.SetOutputLevel(log.Ldebug)
 	}
+	if c.Bool("quiet") {
+		log.SetOutputLevel(log.Lwarn)
+	}
 
 	log.Debugf("os: %s, arch: %s", goos, goarch)
 
@@ -70,7 +80,7 @@ func actionPack(c *cli.Context) {
 	sess := sh.NewSession()
 	sess.SetEnv("GOOS", goos)
 	sess.SetEnv("GOARCH", goarch)
-	sess.ShowCMD = true
+	sess.ShowCMD = !c.Bool("quiet")
 
 	gomarr := strings.Fields(gom)
 	if len(gomarr) >= 1 {
@@ -100,6 +110,8 @@ func actionPack(c *cli.Context) {
 	}
 
 	//log.Infof("archive file to: %s", output)
+	os.MkdirAll(filepath.Dir(output), 0755)
+
 	var z Archiver
 	hasExt := func(ext string) bool { return strings.HasSuffix(output, ext) }
 	switch {
@@ -141,7 +153,8 @@ func actionPack(c *cli.Context) {
 		//pcfg.Settings.Build = DEFAULT_BUILD
 		//}
 		for _, command := range pcfg.Script {
-			if err = sess.Command("bash", "-c", command).Run(); err != nil {
+			//if err = sess.Command("bash", "-c", command).Run(); err != nil {
+			if err = shExecString(sess, command); err != nil {
 				return
 			}
 		}

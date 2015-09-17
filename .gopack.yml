@@ -1,14 +1,9 @@
 author: shengxiang
-description: ""
+description: '...'
 includes:
   - README.md
   - LICENSE
 excludes:
   - \.git
-depth: 20
 script:
-  - go get -v
   - go install
-settings:
-  targetdir: ""
-  outfiles: []

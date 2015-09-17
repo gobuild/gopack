@@ -12,12 +12,12 @@ type PackageConfig struct {
 	Description string   `yaml:"description"`
 	Includes    []string `yaml:"includes"`
 	Excludes    []string `yaml:"excludes"`
-	Depth       int      `yaml:"depth"`
+	Depth       int      `yaml:"-"`
 	Script      []string `yaml:"script"`
 	Settings    struct {
 		TargetDir string   `yaml:"targetdir"` // target dir
 		Outfiles  []string `yaml:"outfiles"`
-	} `yaml:"settings"`
+	} `yaml:"-"`
 }
 
 const RCFILE = ".gopack.yml"

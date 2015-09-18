@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -11,6 +12,7 @@ import (
 	"runtime"
 	"strings"
 	"text/template"
+	"time"
 
 	"github.com/codegangsta/cli"
 	goyaml "gopkg.in/yaml.v2"
@@ -55,15 +57,15 @@ func actionInit(ctx *cli.Context) {
 }
 
 type OSArch struct {
-	OS   string
-	Arch string
+	OS   string `json:"os"`
+	Arch string `json:"arch"`
 }
 
 func actionAll(ctx *cli.Context) {
 	ss := map[string][]string{
+		"darwin":  {"amd64"},
 		"windows": {"amd64", "386"},
 		"linux":   {"amd64", "386", "arm"},
-		"darwin":  {"amd64"},
 	}
 
 	oses := ctx.StringSlice("os")
@@ -86,13 +88,29 @@ func actionAll(ctx *cli.Context) {
 		})
 		fmt.Printf("Building %s %s -> %s ...\n", oa.OS, oa.Arch, wr.String())
 		cmd := exec.Command(os.Args[0], "pack",
-			"-q", "--os", oa.OS, "--arch", oa.Arch, "-o", wr.String())
+			"-q", "--rm", "--os", oa.OS, "--arch", oa.Arch, "-o", wr.String())
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		if err := cmd.Run(); err != nil {
 			log.Fatal(err)
 		}
 	}
+	outJson := ctx.String("json")
+	if outJson == "" {
+		return
+	}
+	vv := map[string]interface{}{
+		"go_version":  runtime.Version(),
+		"update_time": time.Now().Unix(),
+		"format":      "zip",
+		"builds":      osarches,
+	}
+	outfd, err := os.Create(outJson)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer outfd.Close()
+	json.NewEncoder(outfd).Encode(vv)
 }
 
 func init() {
@@ -129,6 +147,11 @@ func init() {
 					Name:  "output, o",
 					Usage: "Output path template",
 					Value: "output/{{.Dir}}-{{.OS}}-{{.Arch}}.zip",
+				},
+				cli.StringFlag{
+					Name:  "json",
+					Usage: "Output json builds",
+					Value: "",
 				},
 			},
 			Action: actionAll,

@@ -1,5 +1,6 @@
 author: shengxiang
 description: '...'
+os: linux darwin
 includes:
   - README.md
   - LICENSE

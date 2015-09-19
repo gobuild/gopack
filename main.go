@@ -143,7 +143,7 @@ func init() {
 				cli.StringFlag{
 					Name:  "os",
 					Usage: "Space-separated list of operating systems to build for",
-					Value: "",
+					Value: DefaultPcfg.OS,
 				},
 				cli.StringFlag{
 					Name:  "output, o",

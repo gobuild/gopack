@@ -89,10 +89,13 @@ func actionPack(c *cli.Context) {
 	}
 
 	// parse yaml
-	pcfg, err := ReadPkgConfig(RCFILE)
-	if err != nil {
-		return
-	}
+	pcfg := DefaultPcfg
+	/*
+		pcfg, err := ReadPkgConfig(RCFILE)
+		if err != nil {
+			return
+		}
+	*/
 
 	//pwd, _ := os.Getwd()
 	log.Debug("config:", pcfg)

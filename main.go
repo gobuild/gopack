@@ -68,7 +68,10 @@ func actionAll(ctx *cli.Context) {
 		"linux":   {"amd64", "386", "arm"},
 	}
 
-	oses := ctx.StringSlice("os")
+	oses := strings.Fields(ctx.String("os"))
+	if len(oses) == 0 {
+		oses = []string{"linux", "darwin", "windows"}
+	}
 	pathTemplate := ctx.String("output")
 	osarches := make([]OSArch, 0)
 	for _, os := range oses {
@@ -119,9 +122,7 @@ func init() {
 
 	app.Name = "gopack"
 	app.Usage = "Build and pack file into tgz or zip"
-	//app.Action = actionPack
 
-	initOS := cli.StringSlice([]string{"linux", "darwin", "windows"})
 	app.Commands = []cli.Command{
 		{
 			Name:  "init",
@@ -138,10 +139,10 @@ func init() {
 			Name:  "all",
 			Usage: fmt.Sprintf("Package all platform packages"),
 			Flags: []cli.Flag{
-				cli.StringSliceFlag{
+				cli.StringFlag{
 					Name:  "os",
-					Usage: "Operation system",
-					Value: &initOS,
+					Usage: "Space-separated list of operating systems to build for",
+					Value: "",
 				},
 				cli.StringFlag{
 					Name:  "output, o",

@@ -22,24 +22,17 @@ type PackageConfig struct {
 
 const RCFILE = ".gopack.yml"
 
-var DefaultPcfg *PackageConfig
-
 var DEFAULT_SCRIPT = []string{"go get -v", "go build"}
-
-func init() {
-	pcfg := &PackageConfig{}
-	pcfg.Author = ""
-	pcfg.Includes = []string{"README.md", "LICENSE", "conf", "templates", "public", "static", "views"}
-	pcfg.Excludes = []string{"\\.git", ".*\\.go"}
-	pcfg.Depth = 20
-	pcfg.Settings.TargetDir = ""
-	pcfg.Script = DEFAULT_SCRIPT
-	DefaultPcfg = pcfg
+var DefaultPcfg *PackageConfig = &PackageConfig{
+	Includes: []string{"README.md", "LICENSE", "conf", "templates", "public", "static", "views"},
+	Excludes: []string{"\\.git"},
+	Depth:    20,
+	Script:   DEFAULT_SCRIPT,
 }
 
 // parse yaml
-func ReadPkgConfig(filepath string) (pcfg PackageConfig, err error) {
-	pcfg = PackageConfig{}
+func ReadPkgConfig(filepath string) (pcfg *PackageConfig, err error) {
+	pcfg = DefaultPcfg
 	if sh.Test("file", filepath) {
 		data, er := ioutil.ReadFile(filepath)
 		if er != nil {
@@ -49,8 +42,6 @@ func ReadPkgConfig(filepath string) (pcfg PackageConfig, err error) {
 		if err = goyaml.Unmarshal(data, &pcfg); err != nil {
 			return
 		}
-	} else {
-		pcfg = *DefaultPcfg
 	}
 	return pcfg, nil
 }

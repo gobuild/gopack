@@ -29,6 +29,7 @@ func findFiles(path string, depth int, skips []*regexp.Regexp) ([]string, error)
 		}
 		if info.IsDir() {
 			pathDepth := strings.Count(path, string(os.PathSeparator)) - baseNumSeps
+			//log.Println("Skip", info, pathDepth, depth)
 			if pathDepth > depth {
 				return filepath.SkipDir
 			}
@@ -41,7 +42,7 @@ func findFiles(path string, depth int, skips []*regexp.Regexp) ([]string, error)
 				break
 			}
 		}
-		// log.Println(isSkip, name)
+		//log.Println(isSkip, name)
 		if !isSkip {
 			files = append(files, path)
 		}
@@ -106,7 +107,6 @@ func actionPack(c *cli.Context) {
 		needs = append(needs, regexp.MustCompile("^"+str+"$"))
 	}
 
-	//log.Infof("archive file to: %s", output)
 	os.MkdirAll(filepath.Dir(output), 0755)
 
 	var z Archiver

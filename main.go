@@ -90,6 +90,7 @@ func actionAll(ctx *cli.Context) {
 			"Dir":  filepath.Base(cwd),
 		})
 		fmt.Printf("Building %s %s -> %s ...\n", oa.OS, oa.Arch, wr.String())
+		//params := []string{"pack", "--rm", "--os", os.OS, "--arch", oa.Arch}
 		cmd := exec.Command(os.Args[0], "pack",
 			"-q", "--rm", "--os", oa.OS, "--arch", oa.Arch, "-o", wr.String())
 		cmd.Stdout = os.Stdout

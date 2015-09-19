@@ -24,7 +24,7 @@ const RCFILE = ".gopack.yml"
 
 var DefaultPcfg *PackageConfig
 
-var DEFAULT_SCRIPT = []string{"go get -v", "go install"}
+var DEFAULT_SCRIPT = []string{"go get -v", "go build"}
 
 func init() {
 	pcfg := &PackageConfig{}

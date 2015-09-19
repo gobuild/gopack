@@ -93,10 +93,7 @@ func actionPack(c *cli.Context) {
 		return
 	}
 
-	pwd, _ := os.Getwd()
-	gobin := filepath.Join(pwd, sanitizedName(pcfg.Settings.TargetDir))
-	sess.SetEnv("GOBIN", gobin)
-	log.Debugf("set env GOBIN=%s", gobin)
+	//pwd, _ := os.Getwd()
 	log.Debug("config:", pcfg)
 	// pcfg.Filesets.Includes = append(pcfg.Filesets.Includes, adds...)
 
@@ -142,23 +139,29 @@ func actionPack(c *cli.Context) {
 		if !sh.Test("dir", targetDir) {
 			os.MkdirAll(targetDir, 0755)
 		}
-		symdir := filepath.Join(targetDir, goos+"_"+goarch)
-		if err = os.Symlink(gobin, symdir); err != nil {
-			log.Fatalf("os symlink error: %s", err)
-		}
-		defer os.Remove(symdir)
+
+		//gobin := filepath.Join(pwd, sanitizedName(pcfg.Settings.TargetDir))
+		//sess.SetEnv("GOBIN", gobin)
+		//log.Debugf("set env GOBIN=%s", gobin)
+		/*
+			symdir := filepath.Join(targetDir, goos+"_"+goarch)
+			if err = os.Symlink(gobin, symdir); err != nil {
+				log.Fatalf("os symlink error: %s", err)
+			}
+		*/
+		//defer os.Remove(symdir)
 		// opts := []string{"install", "-v"}
 		// opts = append(opts, strings.Fields(pcfg.Settings.Addopts)...) // TODO: here need to use shell args parse lib
 		//if pcfg.Settings.Build == "" {
 		//pcfg.Settings.Build = DEFAULT_BUILD
 		//}
+
 		for _, command := range pcfg.Script {
-			//if err = sess.Command("bash", "-c", command).Run(); err != nil {
 			if err = shExecString(sess, command); err != nil {
 				return
 			}
 		}
-		os.Remove(symdir) // I have to do it twice
+		//os.Remove(symdir) // I have to do it twice
 
 		if len(buildFiles) == 0 {
 			cwd, _ := os.Getwd()

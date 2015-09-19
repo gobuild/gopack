@@ -6,4 +6,4 @@ includes:
 excludes:
   - \.git
 script:
-  - go install
+  - go build

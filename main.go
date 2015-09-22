@@ -103,10 +103,18 @@ func actionAll(ctx *cli.Context) {
 	if outJson == "" {
 		return
 	}
+	comment, err := exec.Command("git", "log", "-1", "--oneline").Output()
+	var commentStr string
+	if err != nil {
+		commentStr = os.Getenv("TRAVIS_COMMIT")
+	} else {
+		commentStr = string(comment)
+	}
 	vv := map[string]interface{}{
 		"go_version":  runtime.Version(),
 		"update_time": time.Now().Unix(),
 		"format":      "zip",
+		"comment":     commentStr,
 		"builds":      osarches,
 	}
 	outfd, err := os.Create(outJson)

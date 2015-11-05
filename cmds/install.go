@@ -79,7 +79,8 @@ func deployPackage(pkgName, path string, binDir string) error {
 	}
 	// for linux and darwin
 	os.Remove(filepath.Join(GOBIN, pkgName))
-	return os.Symlink(filepath.Join("../opt/", pkgName, pkgName), filepath.Join(GOBIN, pkgName)) //getInsPath("bin", pkgName))
+	//return os.Symlink(filepath.Join("../opt/", pkgName, pkgName), getInsPath("bin", pkgName))
+	return os.Symlink(getInsPath("opt", pkgName, pkgName), filepath.Join(GOBIN, pkgName))
 }
 
 func InstallAction(c *cli.Context) {

@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/codegangsta/cli"
+	"github.com/gorelease/gopack/cmds"
 	goyaml "gopkg.in/yaml.v2"
 )
 
@@ -183,6 +184,7 @@ func init() {
 			},
 			Action: actionPack,
 		},
+		cmds.InstallFlag,
 	}
 	app.Version = VERSION
 	app.Flags = []cli.Flag{

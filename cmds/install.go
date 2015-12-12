@@ -93,7 +93,9 @@ func deployPackage(pkgName, path string, binDir string) error {
 	prompt("Symlink %v", symlink)
 	// for linux and darwin
 	os.Remove(symlink)
-	return os.Symlink(getInsPath("opt", pkgName, pkgName), symlink)
+
+	// TODO: need to resolve multi binaries
+	return os.Symlink(getInsPath("opt", pkgName, filepath.Base(pkgName)), symlink)
 }
 
 func prompt(format string, args ...interface{}) {

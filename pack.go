@@ -37,12 +37,14 @@ func findFiles(path string, depth int, skips []*regexp.Regexp) ([]string, error)
 		name := info.Name()
 		isSkip := false
 		for _, skip := range skips {
-			if skip.MatchString(name) {
+			if skip.MatchString(name) || skip.MatchString(path) {
 				isSkip = true
 				break
 			}
 		}
-		//log.Println(isSkip, name)
+		if isSkip {
+			log.Debug("skip:", path)
+		}
 		if !isSkip {
 			files = append(files, path)
 		}
@@ -90,16 +92,7 @@ func actionPack(c *cli.Context) {
 
 	// parse yaml
 	pcfg := DefaultPcfg
-	/*
-		pcfg, err := ReadPkgConfig(RCFILE)
-		if err != nil {
-			return
-		}
-	*/
-
-	//pwd, _ := os.Getwd()
 	log.Debug("config:", pcfg)
-	// pcfg.Filesets.Includes = append(pcfg.Filesets.Includes, adds...)
 
 	var skips []*regexp.Regexp
 	for _, str := range pcfg.Excludes {

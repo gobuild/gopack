@@ -114,7 +114,7 @@ func InstallAction(c *cli.Context) {
 	pkgName := c.Args().First()
 	// TODO: use myname for now
 	if len(strings.Split(pkgName, "/")) == 1 {
-		pkgName = "gobuild-offcial/" + pkgName
+		pkgName = "gobuild-official/" + pkgName
 	}
 
 	prompt("Repository %v", pkgName)

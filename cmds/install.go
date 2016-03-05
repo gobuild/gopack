@@ -1,13 +1,18 @@
 package cmds
 
 import (
+	"errors"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strconv"
 	"strings"
 
+	"github.com/cheggaaa/pb"
 	"github.com/codegangsta/cli"
 	"github.com/qiniu/log"
 )
@@ -72,10 +77,34 @@ func downloadSource(name string) (dest string, err error) {
 	prompt("Downloading %v", url)
 	log.Debug("download:", url)
 	dest = getInsPath("src", fmt.Sprintf("%s.zip", repo))
-	cmd := exec.Command("curl", "-fSL", url, "-o", dest)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	err = cmd.Run()
+
+	resp, err := http.Get(url)
+	if err != nil {
+		return
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		err = errors.New("Http status not 200")
+		return
+	}
+
+	lengthStr := resp.Header.Get("Content-Length")
+	if lengthStr == "" {
+		err = errors.New("Content length is empty")
+		return
+	}
+	length, _ := strconv.Atoi(lengthStr)
+	bar := pb.New(length).SetUnits(pb.U_BYTES)
+
+	outFd, err := os.Create(dest)
+	if err != nil {
+		return
+	}
+	defer outFd.Close()
+
+	bar.Start()
+	reader := bar.NewProxyReader(resp.Body)
+	_, err = io.Copy(outFd, reader)
 	return
 }
 

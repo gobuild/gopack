@@ -15,7 +15,7 @@ import (
 var InstallFlag = cli.Command{
 	Name:    "install",
 	Aliases: []string{"i"},
-	Usage:   fmt.Sprintf("Install binary from http://gobuild.io"),
+	Usage:   fmt.Sprintf("Install binary from https://gobuild.io"),
 	Flags: []cli.Flag{
 		cli.BoolFlag{
 			Name:  "debug",
@@ -114,7 +114,7 @@ func InstallAction(c *cli.Context) {
 	pkgName := c.Args().First()
 	// TODO: use myname for now
 	if len(strings.Split(pkgName, "/")) == 1 {
-		pkgName = "codeskyblue/" + pkgName
+		pkgName = "gobuild-offcial/" + pkgName
 	}
 
 	prompt("Repository %v", pkgName)

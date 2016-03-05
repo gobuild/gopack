@@ -15,7 +15,7 @@ import (
 	"time"
 
 	"github.com/codegangsta/cli"
-	"github.com/gorelease/gopack/cmds"
+	"github.com/gobuild/gopack/cmds"
 	goyaml "gopkg.in/yaml.v2"
 )
 

@@ -1,11 +1,16 @@
 # gopack
-[![Build Status](https://travis-ci.org/gorelease/gopack.svg)](https://travis-ci.org/gorelease/gopack)
-[![gorelease](https://dn-gorelease.qbox.me/gorelease-download-blue.svg)](http://gorelease.herokuapp.com/gorelease/gopack)
+[![Build Status](https://travis-ci.org/gobuild/gopack.svg)](https://travis-ci.org/gobuild/gopack)
+[![gorelease](https://dn-gorelease.qbox.me/gorelease-download-blue.svg)](https://gobuild.io/gobuild/gopack)
 
-Tool for [gorelease](https://github.com/gorelease/gorelease)
+Tool for [gobuild](https://gobuild.io)
+
+## Features
+1. Create `.gopack.yml` config file
+2. Build and package build into zip
+3. Download and install binary from <https://gobuild.io>
 
 ## Install
-	go get -v github.com/gorelease/gopack
+	go get -v github.com/gobuild/gopack
 
 ## Usage
 	$ gopack init
@@ -34,6 +39,16 @@ Tool for [gorelease](https://github.com/gorelease/gorelease)
 	Building darwin amd64 -> output/gopack-darwin-amd64.zip ...
 	Building windows amd64 -> output/gopack-windows-amd64.zip ...
 	Building windows 386 -> output/gopack-windows-386.zip ...
+
+	$ gopack install gocode
+	==> Repository gobuild-official/gocode
+	==> Downloading http://dn-gobuild5.qbox.me/gorelease/gobuild-official/gocode/master/darwin-amd64/gocode.zip
+	 2.97 MB / 3.04 MB [===============================================>-]  97.75% 0Archive:  /Users/skyblue/.gopack/src/gocode.zip
+	 3.04 MB / 3.04 MB [=================================================] 100.00% 0
+	  inflating: /Users/skyblue/.gopack/opt/gobuild-official/gocode/README.md  
+	  inflating: /Users/skyblue/.gopack/opt/gobuild-official/gocode/LICENSE  
+	==> Symlink /Users/skyblue/Documents/godir/bin/gocode
+	==> Program [gobuild-official/gocode] installed
 
 see more flags in `gopack -h`
 

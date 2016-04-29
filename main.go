@@ -19,7 +19,7 @@ import (
 	goyaml "gopkg.in/yaml.v2"
 )
 
-const VERSION = "0.2.0915"
+var VERSION = "0.2.0915"
 
 var app = cli.NewApp()
 
@@ -185,6 +185,7 @@ func init() {
 			Action: actionPack,
 		},
 		cmds.InstallFlag,
+		cmds.BuildFlag,
 	}
 	app.Version = VERSION
 	app.Flags = []cli.Flag{
